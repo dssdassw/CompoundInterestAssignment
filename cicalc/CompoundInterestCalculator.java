@@ -1,6 +1,6 @@
 package cicalc;
-import java.util.Scanner;
-import java.math.BigDecimal;
+//import java.util.Scanner;
+//import java.math.BigDecimal;
 
 //this one won't have a GUI component, but will be used by the one that does
 public class CompoundInterestCalculator {

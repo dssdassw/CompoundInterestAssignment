@@ -1,5 +1,4 @@
 package cigui;
-import cicalc.CompoundInterestCalculator;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -9,34 +8,48 @@ public class CompoundInterest extends JFrame {
 	final int WIN_W = 575; //window width
 	final int WIN_H = 300;
 	boolean state = false; //calculate future value mode (future value mode = False, f for future, annual deposit mode = true) 
-	private static CompoundInterest thisWindow;
-	private JPanel mainP, lPanel, rPanel, pp, yp, rp, cp, northPanel, southPanel;
-	private JLabel pLabel, yLabel, rLabel, cLabel, result;
+	//private JPanel mainP, lPanel, rPanel, pp, yp, rp, cp, northPanel, southPanel;
+	//private JLabel pLabel, yLabel, rLabel, cLabel, result;
+	private JPanel mainP;
+	private JLabel result;
 	private JTextField principal, years, rate, annual;
+	//RIP Java Event Queue
 	public CompoundInterest() {
 		setTitle("Compound Interest Calculator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setMinimumSize(new Dimension(WIN_W, WIN_H)); 
-		buildPanel();
+		buildPanel(); //builds the actual thing
 		add(mainP);
 		pack();
 		setVisible(true);
-		System.out.println("I finished");
+		System.out.println("I finished...");
 	}
 	private class calcBtnListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			System.out.print("Responding to calcbutton press...");
-			if (!state) {
+			if (!state) { //does calculation in the future value mode, since !state is future value state
 				System.out.println("How will actionEvent calculate this with values it can't see? Find out next time on Javavio!");
-				BigDecimal p = new BigDecimal(principal.getText());
-				BigDecimal y = new BigDecimal(years.getText());
-				BigDecimal r = new BigDecimal(rate.getText());
-				BigDecimal c = new BigDecimal(annual.getText());
-			}
+				try {
+					BigDecimal p = new BigDecimal(principal.getText());
+					BigDecimal r = new BigDecimal(rate.getText());
+					BigDecimal y = new BigDecimal(years.getText());
+					BigDecimal c = new BigDecimal(annual.getText()); //I take them in as BigDecimal so that the value isn't OP
+					System.out.println("p = " + p.doubleValue() + "; r = " + r.doubleValue() + "; y = " + y.doubleValue() + "; c = " + c.doubleValue());
+					result.setText((calcAnnual(p.doubleValue(), r.doubleValue(), y.doubleValue(), c.doubleValue()).toString()));
+				} catch(java.lang.NullPointerException npe) {
+					System.err.println("NullPointerException caught!: " + npe.getMessage() + " | " + npe.getCause());
+					System.out.println("One or more text fields left unfilled!");
+					result.setText("One or more text fields left unfilled!");
+				} catch(java.lang.NumberFormatException nfe) {
+					System.err.println("NumberFormatException caught!: " + nfe.getMessage() + " | " + nfe.getCause());
+					System.out.println("The inputted value isn't a valid number.");
+					result.setText("The inputted value isn't a valid number.");
+				}
+			} //could probably calc in BigDecimal too if I wasn't lazy
 		}
 	}
 	private void buildPanel() {
-		JPanel mainP  = new JPanel();
+		mainP  = new JPanel();
 		mainP.setLayout(new GridLayout(1, 2)); //so the main JFrame is split into 2 halves down the horizontal centre
 		JPanel lPanel = new JPanel();
 		JPanel rPanel = new JPanel();
@@ -48,24 +61,24 @@ public class CompoundInterest extends JFrame {
 		pp.setLayout(new GridLayout(2,1));
 		JLabel pLabel        = new JLabel("Principal (Initial or current deposit)");
 		pp.add(pLabel);
-		JTextField principal = new JTextField();
+		principal            = new JTextField();
 		pp.add(principal);
 		JPanel yp            = new JPanel();
 		yp.setLayout(new GridLayout(2,1));
 		JLabel yLabel        = new JLabel("Years to mature");
 		yp.add(yLabel);
-		JTextField years     = new JTextField();
+		years                = new JTextField(15);
 		yp.add(years);
 		JPanel rp            = new JPanel();
 		rp.setLayout(new GridLayout(2,1));
 		JLabel rLabel        = new JLabel("Rate of growth (Input percent without % sign");
 		rp.add(rLabel);
-		JTextField rate      = new JTextField();
+		rate                 = new JTextField();
 		JPanel cp            = new JPanel();
 		cp.setLayout(new GridLayout(2,1));
 		JLabel cLabel        = new JLabel("Annual deposit");
 		cp.add(cLabel);
-		JTextField annual    = new JTextField();
+		annual               = new JTextField();
 		cp.add(annual);
 		JButton switchBtn    = new JButton("Switch to calculate annual deposit mode");
 		rp.add(rate);
@@ -86,7 +99,7 @@ public class CompoundInterest extends JFrame {
 		//northPanel.add(calcBtn);
 		JPanel southPanel    = new JPanel();
 		southPanel.setLayout(new BorderLayout());
-		JLabel result        = new JLabel("Crawling in my skin. These wounds they will not heal. Fear is how I fall, Confusing what is real. There's something inside me that pulls beneath the surface; Consuming, confusing. This lack of self-control, I fear is never ending. Controlling. I can't seem... [Bridge:] To find myself again My walls are closing in (without a sense of confidence and I'm convinced that there's just too much pressure to take) I've felt this way before So insecure [Chorus] Discomfort endlessly has pulled itself upon me Distracting, reacting Against my will I stand beside my own reflection It's haunting how I can't seem... [Bridge] [Chorus] [Chorus] There's something inside me that pulls beneath the surface consuming, Confusing what is real. This lack of self-control I fear is never ending controlling, Confusing what is real.");
+		result               = new JLabel("Crawling in my skin. These wounds they will not heal. Fear is how I fall, Confusing what is real. There's something inside me that pulls beneath the surface; Consuming, confusing. This lack of self-control, I fear is never ending. Controlling. I can't seem... [Bridge:] To find myself again My walls are closing in (without a sense of confidence and I'm convinced that there's just too much pressure to take) I've felt this way before So insecure [Chorus] Discomfort endlessly has pulled itself upon me Distracting, reacting Against my will I stand beside my own reflection It's haunting how I can't seem... [Bridge] [Chorus] [Chorus] There's something inside me that pulls beneath the surface consuming, Confusing what is real. This lack of self-control I fear is never ending controlling, Confusing what is real.");
 		southPanel.add(result, BorderLayout.CENTER);
 		//southPanel.add(result);
 		rPanel.add(northPanel);
@@ -94,6 +107,20 @@ public class CompoundInterest extends JFrame {
 		System.out.println("Built panel");
 		mainP.add(lPanel);
 		mainP.add(rPanel);
+	}
+	private void buildAnnualCalculationPanel() {
+		//todo
+	}
+	private static BigDecimal calcAnnual(double P, double r, double Y, double D) { //desired val = D (LOL)
+		//
+		final double z = r + 1;  //memory in use to save... like 0 CPU resources :\
+		r = r/100;
+		return new BigDecimal(((z - 1) * (D - P * Math.pow(z, Y)))/(z*(Math.pow(z, Y) - 1))).setScale(2, BigDecimal.ROUND_HALF_UP); 
+	} //mum get the bracketssssssss
+	private static BigDecimal getFutureValue(double P, double r, double Y, double c) { //maybe should use BigDecimal
+		final double z = r + 1;
+		r = r/100;
+		return new BigDecimal(P*Math.pow(z, Y) + c*((Math.pow(z, Y+1) - z)/(z-1))).setScale(2, BigDecimal.ROUND_HALF_UP);
 	}
 	public static void main(String[] args) {
 		new CompoundInterest();
