@@ -1,20 +1,43 @@
 package cigui;
 import cicalc.CompoundInterestCalculator;
 import javax.swing.*;
-import javax.swing.border.Border;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.math.BigDecimal;
 
 public class CompoundInterest extends JFrame {
 	final int WIN_W = 575; //window width
 	final int WIN_H = 300;
+	boolean state = false; //calculate future value mode (future value mode = False, f for future, annual deposit mode = true) 
+	private static CompoundInterest thisWindow;
+	private JPanel mainP, lPanel, rPanel, pp, yp, rp, cp, northPanel, southPanel;
+	private JLabel pLabel, yLabel, rLabel, cLabel, result;
+	private JTextField principal, years, rate, annual;
 	public CompoundInterest() {
 		setTitle("Compound Interest Calculator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setMinimumSize(new Dimension(WIN_W, WIN_H)); 
-		setLayout(new GridLayout(1, 2)); //so the main JFrame is split into 2 halves down the horizontal centre
+		buildPanel();
+		add(mainP);
+		pack();
+		setVisible(true);
+		System.out.println("I finished");
+	}
+	private class calcBtnListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			System.out.print("Responding to calcbutton press...");
+			if (!state) {
+				System.out.println("How will actionEvent calculate this with values it can't see? Find out next time on Javavio!");
+				BigDecimal p = new BigDecimal(principal.getText());
+				BigDecimal y = new BigDecimal(years.getText());
+				BigDecimal r = new BigDecimal(rate.getText());
+				BigDecimal c = new BigDecimal(annual.getText());
+			}
+		}
+	}
+	private void buildPanel() {
+		JPanel mainP  = new JPanel();
+		mainP.setLayout(new GridLayout(1, 2)); //so the main JFrame is split into 2 halves down the horizontal centre
 		JPanel lPanel = new JPanel();
 		JPanel rPanel = new JPanel();
 		//default layout of left panel is part A
@@ -46,18 +69,19 @@ public class CompoundInterest extends JFrame {
 		cp.add(annual);
 		JButton switchBtn    = new JButton("Switch to calculate annual deposit mode");
 		rp.add(rate);
+		JButton calcBtn      = new JButton("CALCULATE");
+		calcBtn.addActionListener(new calcBtnListener());
 		lPanel.add(pp);
 		lPanel.add(cp);
 		lPanel.add(yp);
 		lPanel.add(rp);
 		lPanel.add(new JLabel("- OR -"));
-		lPanel.add(switchBtn);
+		lPanel.add(calcBtn);
 		//RIGHT PANEL
 		rPanel.setLayout(new GridLayout(2, 1));
 		rPanel.setBorder(BorderFactory.createEmptyBorder(25, 25, 5, 5));
 		JPanel northPanel    = new JPanel();
 		northPanel.setLayout(new BorderLayout());
-		JButton calcBtn      = new JButton("CALCULATE");
 		northPanel.add(calcBtn, BorderLayout.CENTER);
 		//northPanel.add(calcBtn);
 		JPanel southPanel    = new JPanel();
@@ -65,18 +89,11 @@ public class CompoundInterest extends JFrame {
 		JLabel result        = new JLabel("Crawling in my skin. These wounds they will not heal. Fear is how I fall, Confusing what is real. There's something inside me that pulls beneath the surface; Consuming, confusing. This lack of self-control, I fear is never ending. Controlling. I can't seem... [Bridge:] To find myself again My walls are closing in (without a sense of confidence and I'm convinced that there's just too much pressure to take) I've felt this way before So insecure [Chorus] Discomfort endlessly has pulled itself upon me Distracting, reacting Against my will I stand beside my own reflection It's haunting how I can't seem... [Bridge] [Chorus] [Chorus] There's something inside me that pulls beneath the surface consuming, Confusing what is real. This lack of self-control I fear is never ending controlling, Confusing what is real.");
 		southPanel.add(result, BorderLayout.CENTER);
 		//southPanel.add(result);
-		calcBtn.addActionListener(new calcListener());
 		rPanel.add(northPanel);
 		rPanel.add(southPanel);
-		add(lPanel);
-		add(rPanel);
-		pack();
-		setVisible(true);
-	}
-	private class calcListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			System.out.println("How will actionEvent calculate this with values it can't see? Find out next time on Javavio!");
-		}
+		System.out.println("Built panel");
+		mainP.add(lPanel);
+		mainP.add(rPanel);
 	}
 	public static void main(String[] args) {
 		new CompoundInterest();
