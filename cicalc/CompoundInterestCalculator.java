@@ -1,6 +1,6 @@
 package cicalc;
-//import java.util.Scanner;
-//import java.math.BigDecimal;
+import java.util.Scanner;
+import java.math.BigDecimal;
 
 //this one won't have a GUI component, but will be used by the one that does
 public class CompoundInterestCalculator {
@@ -15,7 +15,7 @@ public class CompoundInterestCalculator {
 		final double z = r + 1;
 		return P*Math.pow(z, Y) + c*((Math.pow(z, Y+1) - z)/(z-1)); //confirmed casting unnecessary
 	} //Where P is the principal; z is 1+r where r is the annual interest rate; c is annual contribution; Y is the number of years
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		Scanner in = new Scanner(System.in);
 		System.out.println("Give initial deposit, rate (type in the percentage value, like 2 or 5. Remember to omit the percentage symbol), years to mature, and amount added annually");
 		double[] inputs = {in.nextDouble(), in.nextDouble(), in.nextDouble(), in.nextDouble()}; //cuz fk u I want an array
@@ -36,5 +36,5 @@ public class CompoundInterestCalculator {
 		System.out.println("The annual deposit value to get desired value is " + annual);
 		BigDecimal desiredFutureValue = new BigDecimal(getFutureValue(p, r, y, annual.doubleValue())).setScale(2, BigDecimal.ROUND_HALF_UP);
 		System.out.println("The future value of the deposit is... " + desiredFutureValue);
-	}*/
+	}
 }
