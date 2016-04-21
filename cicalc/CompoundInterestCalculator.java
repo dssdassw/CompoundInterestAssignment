@@ -13,7 +13,7 @@ public class CompoundInterestCalculator {
 	} //mum get the bracketssssssss
 	public static double getFutureValue(double P, double r, double Y, double c) { //maybe should use BigDecimal
 		final double z = r + 1;
-		return P*Math.pow(z, Y) + c*((Math.pow(z, Y+1) - z)/(z-1)); //confirmed casting unnecessary
+		return (P*Math.pow(z, Y) + c*((Math.pow(z, Y+1) - z)/(z-1))); //confirmed casting unnecessary
 	} //Where P is the principal; z is 1+r where r is the annual interest rate; c is annual contribution; Y is the number of years
 	public static void main(String[] args) {
 		Scanner in = new Scanner(System.in);
